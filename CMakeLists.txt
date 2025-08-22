@@ -15,7 +15,11 @@ file(GLOB SOURCES "*.cpp" "*.h")
 add_executable(FieldsOfFury ${SOURCES}
         Character.cpp
         Prop.h
-        Prop.cpp)
+        Prop.cpp
+        Enemy.h
+        Enemy.cpp
+        BaseCharacter.cpp
+        BaseCharacter.h)
 
 # Link libraries
 target_link_libraries(FieldsOfFury raylib opengl32 gdi32 winmm)

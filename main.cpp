@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Enemy.h"
 #include "Prop.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -15,8 +16,9 @@ int main() {
 
     Character knight{windowWidth, windowHeight};
 
+    // Props
     float propScale{4.f};
-    Prop props[11] {
+    Prop props[11]{
         Prop{Vector2{380.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
         Prop{Vector2{412.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
         Prop{Vector2{444.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
@@ -29,6 +31,14 @@ int main() {
         Prop{Vector2{360.f * propScale, 390.f * propScale}, LoadTexture("assets/nature_tileset/Bush.png")},
         Prop{Vector2{360.f * propScale, 450.f * propScale}, LoadTexture("assets/nature_tileset/Bush.png")}
     };
+
+    Enemy goblin{
+        Vector2{0.f, 0.f},
+        LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+        LoadTexture("assets/characters/goblin_run_spritesheet.png")
+    };
+
+    goblin .setTarget(&knight);
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
@@ -60,6 +70,8 @@ int main() {
                 knight.undoMovement();
             }
         }
+
+        goblin.tick(deltaTime);
 
         EndDrawing();
     }
