@@ -15,6 +15,7 @@ Vector2 Character::getScreenPos() {
 }
 
 void Character::tick(float deltaTime) {
+    velocity = {};
     if (IsKeyDown(KEY_A))
         velocity.x -= 1.0;
     if (IsKeyDown(KEY_D))
