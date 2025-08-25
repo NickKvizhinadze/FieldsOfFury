@@ -38,7 +38,7 @@ int main() {
         LoadTexture("assets/characters/goblin_run_spritesheet.png")
     };
 
-    goblin .setTarget(&knight);
+    goblin.setTarget(&knight);
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
@@ -72,6 +72,11 @@ int main() {
         }
 
         goblin.tick(deltaTime);
+
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionRecs(
+                goblin.getCollisionRec(), knight.getWeaponCollisionRec())) {
+            goblin.setAlive(false);
+        }
 
         EndDrawing();
     }
