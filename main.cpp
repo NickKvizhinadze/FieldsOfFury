@@ -4,21 +4,21 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <string>
+#include <vector>
 
-int main() {
-    const int windowWidth{1280};
-    const int windowHeight{720};
+const int windowWidth{1280};
+const int windowHeight{720};
+Texture2D map{};
+Vector2 mapPos{};
+float mapScale{4.f};
+std::vector<Prop> props{};
+std::vector<Enemy*> enemies = {};
 
-    InitWindow(windowWidth, windowHeight, "Fields of Fury");
-    Texture2D map = LoadTexture("assets/nature_tileset/WorldMapLevel1.png");
-    Vector2 mapPos{0.0, 0.0};
-    float mapScale{4.f};
-
-    Character knight{windowWidth, windowHeight};
-
-    // Props
+void setupLevelOne() {
+    map = LoadTexture("assets/nature_tileset/WorldMapLevel1.png");
+    //Props
     float propScale{4.f};
-    Prop props[11]{
+    props = {
         Prop{Vector2{380.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
         Prop{Vector2{412.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
         Prop{Vector2{444.f * propScale, 129.f * propScale}, LoadTexture("assets/nature_tileset/Log.png")},
@@ -32,19 +32,34 @@ int main() {
         Prop{Vector2{360.f * propScale, 450.f * propScale}, LoadTexture("assets/nature_tileset/Bush.png")}
     };
 
-    Enemy goblin{
-        Vector2{800.f, 300.f},
-        LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
-        LoadTexture("assets/characters/goblin_run_spritesheet.png")
+
+    enemies = {
+        new Enemy{
+            Vector2{800.f, 300.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png")
+        },
+        new Enemy{
+            Vector2{500.f, 700.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png")
+        }
     };
-    Enemy slime{
-        Vector2{500.f, 700.f},
-        LoadTexture("assets/characters/slime_idle_spritesheet.png"),
-        LoadTexture("assets/characters/slime_run_spritesheet.png")
-    };
-    Enemy *enemies[] = {
-        &goblin, &slime
-    };
+}
+
+void cleanUpLevel() {
+    // At the end of main(), before return:
+    for (Enemy* enemy : enemies) {
+        delete enemy;
+    }
+}
+
+
+int main() {
+    InitWindow(windowWidth, windowHeight, "Fields of Fury");
+
+    setupLevelOne();
+Character knight{windowWidth, windowHeight};
 
     for (Enemy *enemy: enemies) {
         enemy->setTarget(&knight);
@@ -103,6 +118,9 @@ int main() {
 
         EndDrawing();
     }
+
+    //TODO: use it when level changed too
+    cleanUpLevel();
 
     CloseWindow();
 
