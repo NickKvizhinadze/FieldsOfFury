@@ -5,7 +5,6 @@
 #include "raymath.h"
 #include <string>
 
-
 int main() {
     const int windowWidth{1280};
     const int windowHeight{720};
@@ -34,12 +33,23 @@ int main() {
     };
 
     Enemy goblin{
-        Vector2{0.f, 0.f},
+        Vector2{800.f, 300.f},
         LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
         LoadTexture("assets/characters/goblin_run_spritesheet.png")
     };
+    Enemy slime{
+        Vector2{500.f, 700.f},
+        LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+        LoadTexture("assets/characters/slime_run_spritesheet.png")
+    };
+    Enemy *enemies[] = {
+        &goblin, &slime
+    };
 
-    goblin.setTarget(&knight);
+    for (Enemy *enemy: enemies) {
+        enemy->setTarget(&knight);
+    }
+
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
@@ -82,11 +92,13 @@ int main() {
             }
         }
 
-        goblin.tick(deltaTime);
+        for (Enemy *enemy: enemies) {
+            enemy->tick(deltaTime);
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionRecs(
-                goblin.getCollisionRec(), knight.getWeaponCollisionRec())) {
-            goblin.damage(knight.getWeaponDamage());
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionRecs(
+                    enemy->getCollisionRec(), knight.getWeaponCollisionRec())) {
+                enemy->damage(knight.getWeaponDamage());
+            }
         }
 
         EndDrawing();

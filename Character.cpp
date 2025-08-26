@@ -16,9 +16,9 @@ Vector2 Character::getScreenPos() {
 
 void Character::tick(float deltaTime) {
     if (!alive) {
-        //TODO: game over functionality
         return;
     }
+
     velocity = {};
     if (IsKeyDown(KEY_A))
         velocity.x -= 1.0;
@@ -64,5 +64,5 @@ void Character::tick(float deltaTime) {
 
     DrawTexturePro(weapon, source, dest, origin, rotation, WHITE);
 
-    DrawRectangleLines(weaponCollisionRec.x, weaponCollisionRec.y, weaponCollisionRec.width, weaponCollisionRec.height, RED);
+    // DrawRectangleLines(weaponCollisionRec.x, weaponCollisionRec.y, weaponCollisionRec.width, weaponCollisionRec.height, RED);
 }
