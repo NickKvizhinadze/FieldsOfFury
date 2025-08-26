@@ -19,6 +19,14 @@ Rectangle BaseCharacter::getCollisionRec() {
     };
 }
 
+
+void BaseCharacter::damage(float damage){
+    health -= damage;
+
+    if (health <= 0)
+        alive = false;
+}
+
 void BaseCharacter::tick(float deltaTime) {
     worldPosLastFrame = worldPos;
 

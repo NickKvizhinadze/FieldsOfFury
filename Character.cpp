@@ -15,7 +15,7 @@ Vector2 Character::getScreenPos() {
 }
 
 void Character::tick(float deltaTime) {
-    if (!getAlive()) {
+    if (!alive) {
         //TODO: game over functionality
         return;
     }

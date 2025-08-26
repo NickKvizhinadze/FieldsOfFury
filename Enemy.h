@@ -11,4 +11,5 @@ public:
     void setTarget(Character* character);
 private:
     Character* target;
+    float damagePerSec{10.f};
 };

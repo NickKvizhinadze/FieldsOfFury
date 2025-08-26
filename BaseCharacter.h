@@ -16,10 +16,9 @@ public:
 
     virtual Vector2 getScreenPos() = 0;
 
-    bool getAlive() { return alive; }
-    void setAlive(bool isAlive) {
-        alive = isAlive;
-    }
+    virtual void damage(float damage);
+
+    bool getAlive() const { return alive; }
 
 protected:
     Texture2D texture{LoadTexture("assets/characters/knight_idle_spritesheet.png")};
@@ -42,6 +41,7 @@ protected:
     float scale{4.f};
     float rightLeft{1.f};
     bool alive{true};
+    float health{100.f};
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include "Prop.h"
 #include "raylib.h"
 #include "raymath.h"
+#include <string>
 
 
 int main() {
@@ -55,6 +56,16 @@ int main() {
             prop.Render(knight.getWorldPos());
         }
 
+        if (!knight.getAlive()) {
+            DrawText("GAME OVER !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, RED);
+            EndDrawing();
+            continue;
+        }
+
+        std::string health = "Health: ";
+        health.append(std::to_string(knight.getHealth() > 0 ? knight.getHealth() : 0), 0, 5);
+        DrawText(health.c_str(), windowWidth - 270.f, 45.f, 40, RED);
+
         knight.tick(deltaTime);
 
         // check map bounds
@@ -75,7 +86,7 @@ int main() {
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionRecs(
                 goblin.getCollisionRec(), knight.getWeaponCollisionRec())) {
-            goblin.setAlive(false);
+            goblin.damage(knight.getWeaponDamage());
         }
 
         EndDrawing();

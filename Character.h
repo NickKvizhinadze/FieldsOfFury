@@ -13,10 +13,14 @@ public:
 
     virtual Vector2 getScreenPos() override;
 
+    float getWeaponDamage() const { return weaponDamage; }
+    float getHealth() const { return health; }
+
 private:
     int windowWidth;
     int windowHeight;
     Texture2D weapon{LoadTexture("assets/characters/weapon_sword.png")};
     Rectangle weaponCollisionRec{};
+    float weaponDamage{23};
 };
 #endif
