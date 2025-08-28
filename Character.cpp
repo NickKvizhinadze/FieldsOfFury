@@ -14,6 +14,10 @@ Vector2 Character::getScreenPos() {
     };
 }
 
+void Character::resetHealth() {
+    health = 100;
+}
+
 void Character::tick(float deltaTime) {
     if (!alive) {
         return;

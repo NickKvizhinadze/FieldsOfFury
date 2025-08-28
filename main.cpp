@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Character.h"
 #include "Enemy.h"
 #include "Prop.h"
@@ -6,13 +7,14 @@
 #include <string>
 #include <vector>
 
+int level{1};
 const int windowWidth{1280};
 const int windowHeight{720};
 Texture2D map{};
 Vector2 mapPos{};
 float mapScale{4.f};
 std::vector<Prop> props{};
-std::vector<Enemy*> enemies = {};
+std::vector<Enemy *> enemies = {};
 
 void setupLevelOne() {
     map = LoadTexture("assets/nature_tileset/WorldMapLevel1.png");
@@ -37,29 +39,89 @@ void setupLevelOne() {
         new Enemy{
             Vector2{800.f, 300.f},
             LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
-            LoadTexture("assets/characters/goblin_run_spritesheet.png")
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
         },
         new Enemy{
             Vector2{500.f, 700.f},
             LoadTexture("assets/characters/slime_idle_spritesheet.png"),
-            LoadTexture("assets/characters/slime_run_spritesheet.png")
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
         }
     };
 }
 
-void cleanUpLevel() {
+void setupLevelTwo() {
+    map = LoadTexture("assets/nature_tileset/WorldMapLevel2.png");
+    //Props
+    float propScale{4.f};
+    props = {
+        Prop{Vector2{380.f * propScale, 179.f * propScale}, LoadTexture("assets/nature_tileset/SnowLog.png")},
+        Prop{Vector2{412.f * propScale, 179.f * propScale}, LoadTexture("assets/nature_tileset/SnowLog.png")},
+        Prop{Vector2{444.f * propScale, 179.f * propScale}, LoadTexture("assets/nature_tileset/SnowLog.png")},
+        Prop{Vector2{1080.f * propScale, 500.f * propScale}, LoadTexture("assets/nature_tileset/SnowRock.png")},
+        Prop{Vector2{150.f * propScale, 625.f * propScale}, LoadTexture("assets/nature_tileset/SnowRock.png")},
+        Prop{Vector2{230.f * propScale, 240.f * propScale}, LoadTexture("assets/nature_tileset/SnowRock.png")},
+        Prop{Vector2{420.f * propScale, 820.f * propScale}, LoadTexture("assets/nature_tileset/SnowRock.png")},
+        Prop{Vector2{420.f * propScale, 330.f * propScale}, LoadTexture("assets/nature_tileset/SnowBush.png")},
+        Prop{Vector2{452.f * propScale, 330.f * propScale}, LoadTexture("assets/nature_tileset/SnowBush.png")},
+        Prop{Vector2{360.f * propScale, 390.f * propScale}, LoadTexture("assets/nature_tileset/SnowBush.png")},
+        Prop{Vector2{420.f * propScale, 550.f * propScale}, LoadTexture("assets/nature_tileset/SnowTree.png")}
+    };
+
+
+    enemies = {
+        new Enemy{
+            Vector2{800.f, 300.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
+        },
+        new Enemy{
+            Vector2{250.f, 800.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
+        },
+        new Enemy{
+            Vector2{1500.f, 1700.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
+        },
+        new Enemy{
+            Vector2{800.f, 2000.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
+        }
+    };
+}
+
+void cleanUpLevel(Character *knight) {
     // At the end of main(), before return:
-    for (Enemy* enemy : enemies) {
+    for (Enemy *enemy: enemies) {
         delete enemy;
     }
+
+    knight->resetHealth();
 }
 
 
 int main() {
     InitWindow(windowWidth, windowHeight, "Fields of Fury");
 
-    setupLevelOne();
-Character knight{windowWidth, windowHeight};
+    switch (level) {
+        case 1:
+            setupLevelOne();
+            break;
+        case 2:
+            setupLevelTwo();
+            break;
+        default:
+            throw std::runtime_error("Invalid level");
+    }
+    Character knight{windowWidth, windowHeight};
 
     for (Enemy *enemy: enemies) {
         enemy->setTarget(&knight);
@@ -120,7 +182,7 @@ Character knight{windowWidth, windowHeight};
     }
 
     //TODO: use it when level changed too
-    cleanUpLevel();
+    cleanUpLevel(&knight);
 
     CloseWindow();
 

@@ -15,7 +15,7 @@ public:
 
     float getWeaponDamage() const { return weaponDamage; }
     float getHealth() const { return health; }
-
+    void resetHealth();
 private:
     int windowWidth;
     int windowHeight;
