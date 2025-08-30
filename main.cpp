@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <stdexcept>
 #include "Character.h"
 #include "Enemy.h"
@@ -15,6 +16,28 @@ Vector2 mapPos{};
 float mapScale{4.f};
 std::vector<Prop> props{};
 std::vector<Enemy *> enemies = {};
+Texture2D levelDoor{};
+Rectangle levelDoorRec{};
+
+void drawLevelDoor(Vector2 knightPos) {
+    Vector2 worldPos = {600, 400};
+    Vector2 screenPos{Vector2Subtract(worldPos, knightPos)};
+    float width{levelDoor.width / 12.f};
+    float height{levelDoor.height / 8.f};
+    float scale{0.5f};
+    Rectangle source{
+        0, 0, width, height
+    };
+    Rectangle dest{screenPos.x, screenPos.y, scale * width, scale * height};
+
+    DrawTexturePro(levelDoor, source, dest, Vector2{}, 0.f, WHITE);
+    levelDoorRec = Rectangle{
+        screenPos.x,
+        screenPos.y,
+        width * scale,
+        height * scale
+    };
+}
 
 void setupLevelOne() {
     map = LoadTexture("assets/nature_tileset/WorldMapLevel1.png");
@@ -107,10 +130,8 @@ void cleanUpLevel(Character *knight) {
     knight->resetHealth();
 }
 
-
-int main() {
-    InitWindow(windowWidth, windowHeight, "Fields of Fury");
-
+void changeLevel(Character *knight) {
+    cleanUpLevel(knight);
     switch (level) {
         case 1:
             setupLevelOne();
@@ -121,14 +142,21 @@ int main() {
         default:
             throw std::runtime_error("Invalid level");
     }
-    Character knight{windowWidth, windowHeight};
 
     for (Enemy *enemy: enemies) {
-        enemy->setTarget(&knight);
+        enemy->setTarget(knight);
     }
+}
 
 
+int main() {
+    InitWindow(windowWidth, windowHeight, "Fields of Fury");
+    levelDoor = LoadTexture("assets/nature_tileset/LevelDoor.png");
+
+    Character knight{windowWidth, windowHeight};
+    changeLevel(&knight);
     SetTargetFPS(60);
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
@@ -147,6 +175,19 @@ int main() {
             DrawText("GAME OVER !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, RED);
             EndDrawing();
             continue;
+        }
+
+        if (std::all_of(enemies.begin(), enemies.end(), [](Enemy *enemy) { return !enemy->getAlive(); })) {
+            drawLevelDoor(knight.getWorldPos());
+            if (CheckCollisionRecs(knight.getCollisionRec(), levelDoorRec)) {
+                if (level == 2) {
+                    DrawText("YOU WIN !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, GREEN);
+                    EndDrawing();
+                    continue;
+                }
+                level++;
+                changeLevel(&knight);
+            }
         }
 
         std::string health = "Health: ";
