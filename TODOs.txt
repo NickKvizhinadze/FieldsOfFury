@@ -5,5 +5,5 @@
     a. level change door appears after kill all enemies - DONE
     b. when you collide with level change door, level should change - DONE
     c. on level change knight health and position should be reset - DONE
-3. Enemies should have their health bar on top of their head
+3. Enemies should have their health bar on top of their head - DONE
 4. Setup level 3 - Autumn

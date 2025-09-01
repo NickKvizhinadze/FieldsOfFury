@@ -68,5 +68,4 @@ void Character::tick(float deltaTime) {
 
     DrawTexturePro(weapon, source, dest, origin, rotation, WHITE);
 
-    // DrawRectangleLines(weaponCollisionRec.x, weaponCollisionRec.y, weaponCollisionRec.width, weaponCollisionRec.height, RED);
 }
