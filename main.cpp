@@ -121,6 +121,64 @@ void setupLevelTwo() {
     };
 }
 
+
+void setupLevelThree() {
+    map = LoadTexture("assets/nature_tileset/WorldMapLevel3.png");
+    //Props
+    float propScale{4.f};
+    props = {
+        Prop{Vector2{330.f * propScale, 335.f * propScale}, LoadTexture("assets/nature_tileset/autumntree.png")},
+        Prop{Vector2{212.f * propScale, 400.f * propScale}, LoadTexture("assets/nature_tileset/AutumnLog.png")},
+        Prop{Vector2{300.f * propScale, 180.f * propScale}, LoadTexture("assets/nature_tileset/AutumnLog.png")},
+        Prop{Vector2{1080.f * propScale, 1000.f * propScale}, LoadTexture("assets/nature_tileset/AutumnBush.png")},
+        Prop{Vector2{450.f * propScale, 625.f * propScale}, LoadTexture("assets/nature_tileset/AutumnBush.png")},
+        Prop{Vector2{950.f * propScale, 240.f * propScale}, LoadTexture("assets/nature_tileset/AutumnBush.png")},
+        Prop{Vector2{600.f * propScale, 820.f * propScale}, LoadTexture("assets/nature_tileset/AutumnBush.png")},
+        Prop{Vector2{420.f * propScale, 300.f * propScale}, LoadTexture("assets/nature_tileset/autumntreeline.png")},
+        Prop{Vector2{452.f * propScale, 700.f * propScale}, LoadTexture("assets/nature_tileset/autumntreeline.png")}
+    };
+
+
+    enemies = {
+        new Enemy{
+            Vector2{800.f, 800.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
+        },
+        new Enemy{
+            Vector2{250.f, 400.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
+        },
+        new Enemy{
+            Vector2{1080.f, 650.f},
+            LoadTexture("assets/characters/goblin_idle_spritesheet.png"),
+            LoadTexture("assets/characters/goblin_run_spritesheet.png"),
+            3.f
+        },
+        new Enemy{
+            Vector2{1500.f, 1700.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
+        },
+        new Enemy{
+            Vector2{800.f, 2000.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
+        },
+        new Enemy{
+            Vector2{500.f, 900.f},
+            LoadTexture("assets/characters/slime_idle_spritesheet.png"),
+            LoadTexture("assets/characters/slime_run_spritesheet.png"),
+            2.5f
+        }
+    };
+}
+
 void cleanUpLevel(Character *knight) {
     // At the end of main(), before return:
     for (Enemy *enemy: enemies) {
@@ -138,6 +196,9 @@ void changeLevel(Character *knight) {
             break;
         case 2:
             setupLevelTwo();
+            break;
+        case 3:
+            setupLevelThree();
             break;
         default:
             throw std::runtime_error("Invalid level");
@@ -180,7 +241,7 @@ int main() {
         if (std::all_of(enemies.begin(), enemies.end(), [](Enemy *enemy) { return !enemy->getAlive(); })) {
             drawLevelDoor(knight.getWorldPos());
             if (CheckCollisionRecs(knight.getCollisionRec(), levelDoorRec)) {
-                if (level == 2) {
+                if (level == 3) {
                     DrawText("YOU WIN !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, GREEN);
                     EndDrawing();
                     continue;
