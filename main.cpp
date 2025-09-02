@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "Button.h"
+
 int level{1};
 const int windowWidth{1280};
 const int windowHeight{720};
@@ -18,6 +20,7 @@ std::vector<Prop> props{};
 std::vector<Enemy *> enemies = {};
 Texture2D levelDoor{};
 Rectangle levelDoorRec{};
+Vector2 mousePoint = {0.0f, 0.0f};
 
 void drawLevelDoor(Vector2 knightPos) {
     Vector2 worldPos = {600, 400};
@@ -209,20 +212,42 @@ void changeLevel(Character *knight) {
     }
 }
 
+void restart(Character *knight) {
+    level = 1;
+    changeLevel(knight);
+}
+
+
+void buttonClickHandle(Character *knight, Button *btn) {
+    mousePoint = GetMousePosition();
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btn->getBtnBounds())) {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            PlaySound(btn->getFxButton());
+            restart(knight);
+        }
+    }
+}
+
 
 int main() {
     InitWindow(windowWidth, windowHeight, "Fields of Fury");
+    InitAudioDevice();
     levelDoor = LoadTexture("assets/nature_tileset/LevelDoor.png");
+    Music bgMusic = LoadMusicStream("assets/background-music.mp3");
+    PlayMusicStream(bgMusic);
 
     Character knight{windowWidth, windowHeight};
     changeLevel(&knight);
     SetTargetFPS(60);
-
+    Button button{"assets/button.png", "assets/Coffee1.wav", windowWidth, windowHeight};
+    PlaySound(button.getFxButton());
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
 
         float deltaTime = GetFrameTime();
+        UpdateMusicStream(bgMusic);
 
         mapPos = Vector2Scale(knight.getWorldPos(), -1.f);
         DrawTextureEx(map, mapPos, 0.0, mapScale, WHITE);
@@ -233,7 +258,9 @@ int main() {
         }
 
         if (!knight.getAlive()) {
-            DrawText("GAME OVER !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, RED);
+            DrawText("GAME OVER !!!", (windowWidth / 2), (windowHeight / 2) - 80.f, 40, RED);
+            button.render();
+            buttonClickHandle(&knight, &button);
             EndDrawing();
             continue;
         }
@@ -242,7 +269,9 @@ int main() {
             drawLevelDoor(knight.getWorldPos());
             if (CheckCollisionRecs(knight.getCollisionRec(), levelDoorRec)) {
                 if (level == 3) {
-                    DrawText("YOU WIN !!!", (windowWidth / 2) - 20, (windowHeight / 2) - 20.f, 40, GREEN);
+                    DrawText("YOU WIN !!!", (windowWidth / 2), (windowHeight / 2) - 80.f, 40, GREEN);
+                    button.render();
+                    buttonClickHandle(&knight, &button);
                     EndDrawing();
                     continue;
                 }
@@ -283,9 +312,8 @@ int main() {
         EndDrawing();
     }
 
-    //TODO: use it when level changed too
     cleanUpLevel(&knight);
-
+    UnloadMusicStream(bgMusic);
     CloseWindow();
 
     return 0;

@@ -19,7 +19,9 @@ add_executable(FieldsOfFury ${SOURCES}
         Enemy.h
         Enemy.cpp
         BaseCharacter.cpp
-        BaseCharacter.h)
+        BaseCharacter.h
+        Button.h
+        Button.cpp)
 
 # Link libraries
 target_link_libraries(FieldsOfFury raylib opengl32 gdi32 winmm)

@@ -15,6 +15,9 @@ Vector2 Character::getScreenPos() {
 }
 
 void Character::resetHealth() {
+    if (!alive) {
+        alive = true;
+    }
     health = 100;
 }
 
